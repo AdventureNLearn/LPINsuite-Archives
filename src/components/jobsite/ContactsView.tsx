@@ -15,18 +15,18 @@ import {
   contactRoleLabel,
   divisionLabel,
   TRADE_DIVISIONS,
-} from "@/lib/fieldpulse/divisions";
-import { printContacts } from "@/lib/fieldpulse/pdf";
-import { useFieldpulseStore } from "@/lib/fieldpulse/store";
-import type { ContactRole, TradeDivision } from "@/lib/fieldpulse/types";
+} from "@/lib/jobsite/divisions";
+import { printContacts } from "@/lib/jobsite/pdf";
+import { useJobsiteStore } from "@/lib/jobsite/store";
+import type { ContactRole, TradeDivision } from "@/lib/jobsite/types";
 import { cn } from "@/lib/utils";
 
 export function ContactsView() {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
-  const addContact = useFieldpulseStore((s) => s.addContact);
-  const updateContact = useFieldpulseStore((s) => s.updateContact);
-  const removeContact = useFieldpulseStore((s) => s.removeContact);
-  const setView = useFieldpulseStore((s) => s.setView);
+  const jobsite = useJobsiteStore((s) => s.jobsite);
+  const addContact = useJobsiteStore((s) => s.addContact);
+  const updateContact = useJobsiteStore((s) => s.updateContact);
+  const removeContact = useJobsiteStore((s) => s.removeContact);
+  const setView = useJobsiteStore((s) => s.setView);
 
   const contacts = jobsite.contacts ?? [];
   const byDivision = useMemo(() => {

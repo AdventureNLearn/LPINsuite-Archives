@@ -19,38 +19,38 @@ import {
   buildDeskSummary,
   buildPrintHtml,
   buildReadinessPacket,
-} from "@/lib/fieldpulse/domain";
+} from "@/lib/jobsite/domain";
 import {
   US_PRODUCT_NOTICE,
   US_STATES,
-} from "@/lib/fieldpulse/jurisdictions";
+} from "@/lib/jobsite/jurisdictions";
 import {
   buildMailtoHref,
   downloadPack,
   openPrintPacket,
-} from "@/lib/fieldpulse/pack";
-import { useFieldpulseStore } from "@/lib/fieldpulse/store";
+} from "@/lib/jobsite/pack";
+import { useJobsiteStore } from "@/lib/jobsite/store";
 import type {
   ConstructionIndustry,
   ProjectIdentity,
-} from "@/lib/fieldpulse/types";
+} from "@/lib/jobsite/types";
 import {
   CONSTRUCTION_INDUSTRIES,
   industryLabel,
-} from "@/lib/fieldpulse/schedules";
+} from "@/lib/jobsite/schedules";
 import {
   CODE_DISCLAIMER,
   resolveAhjCodePack,
-} from "@/lib/fieldpulse/codes";
-import { cycleStalenessMessage } from "@/lib/fieldpulse/code-cycles";
+} from "@/lib/jobsite/codes";
+import { cycleStalenessMessage } from "@/lib/jobsite/code-cycles";
 import {
   checkGuidanceUpdates,
   getGuidanceCacheMeta,
   GUIDANCE_REFRESH_DISCLAIMER,
   hasDedicatedCycleProfileWithCache,
   resolveStateCodeCycleWithCache,
-} from "@/lib/fieldpulse/jurisdiction-packs";
-import { todayYmd } from "@/lib/fieldpulse/gantt";
+} from "@/lib/jobsite/jurisdiction-packs";
+import { todayYmd } from "@/lib/jobsite/gantt";
 import { cn } from "@/lib/utils";
 
 export function UsScopeBanner({ compact }: { compact?: boolean }) {
@@ -95,13 +95,13 @@ function syncFormFromJobsite(jobsite: {
 }
 
 export function ProjectView() {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
-  const updateProject = useFieldpulseStore((s) => s.updateProject);
-  const startNewProject = useFieldpulseStore((s) => s.startNewProject);
-  const loadDemo = useFieldpulseStore((s) => s.loadDemo);
-  const importPackText = useFieldpulseStore((s) => s.importPackText);
-  const applyIndustrySchedule = useFieldpulseStore((s) => s.applyIndustrySchedule);
-  const setView = useFieldpulseStore((s) => s.setView);
+  const jobsite = useJobsiteStore((s) => s.jobsite);
+  const updateProject = useJobsiteStore((s) => s.updateProject);
+  const startNewProject = useJobsiteStore((s) => s.startNewProject);
+  const loadDemo = useJobsiteStore((s) => s.loadDemo);
+  const importPackText = useJobsiteStore((s) => s.importPackText);
+  const applyIndustrySchedule = useJobsiteStore((s) => s.applyIndustrySchedule);
+  const setView = useJobsiteStore((s) => s.setView);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState(() => syncFormFromJobsite(jobsite));
@@ -236,7 +236,7 @@ export function ProjectView() {
 
   function onExport() {
     try {
-      downloadPack(useFieldpulseStore.getState().jobsite);
+      downloadPack(useJobsiteStore.getState().jobsite);
       toast.success("Project pack downloaded (.lpin-jobsite.json).");
     } catch {
       toast.error("Could not download pack.");
@@ -260,7 +260,7 @@ export function ProjectView() {
 
   function onPrint() {
     try {
-      const j = useFieldpulseStore.getState().jobsite;
+      const j = useJobsiteStore.getState().jobsite;
       openPrintPacket(buildPrintHtml(j), `LPIN Suite Jobsite — ${j.name}`);
       toast.message("Print dialog — choose Save as PDF for a file.");
     } catch (e) {
@@ -271,7 +271,7 @@ export function ProjectView() {
   async function onCopyPacket() {
     try {
       await navigator.clipboard.writeText(
-        buildReadinessPacket(useFieldpulseStore.getState().jobsite),
+        buildReadinessPacket(useJobsiteStore.getState().jobsite),
       );
       toast.success("Full readiness packet copied.");
     } catch {
@@ -280,7 +280,7 @@ export function ProjectView() {
   }
 
   function onEmail() {
-    const j = useFieldpulseStore.getState().jobsite;
+    const j = useJobsiteStore.getState().jobsite;
     window.location.href = buildMailtoHref(j, buildDeskSummary(j));
   }
 

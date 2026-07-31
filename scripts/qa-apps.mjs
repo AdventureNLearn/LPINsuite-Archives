@@ -10,9 +10,9 @@ page.on("console", (m) => {
   if (m.type() === "error") errors.push(m.text());
 });
 
-// Fieldpulse full flows
-await page.goto("http://127.0.0.1:8080/fieldpulse", { waitUntil: "networkidle" });
-await page.evaluate(() => localStorage.removeItem("aos-fieldpulse-v2"));
+// Jobsite full flows
+await page.goto("http://127.0.0.1:8080/jobsite", { waitUntil: "networkidle" });
+await page.evaluate(() => localStorage.removeItem("lpin-jobsite-v1"));
 await page.reload({ waitUntil: "networkidle" });
 await page.waitForTimeout(400);
 await page.getByRole("button", { name: /Reset demo/i }).click();
@@ -63,7 +63,7 @@ const afterInsp = await page.locator("body").innerText();
 const inspRequested = afterInsp.includes("Building B, floor 1") || afterInsp.includes("Requested");
 await page.screenshot({ path: "/workspace/screenshots/fp-inspections.png", fullPage: true });
 
-// Claimcard plain language
+// Claims plain language
 await page.goto("http://127.0.0.1:8080/claimcard", { waitUntil: "networkidle" });
 const ccHome = await page.locator("body").innerText();
 const ccPlain =
@@ -76,9 +76,9 @@ const board = await page.locator("body").innerText();
 const boardOk = board.includes("How scoring works") || board.includes("primary");
 await page.screenshot({ path: "/workspace/screenshots/cc-plain.png", fullPage: true });
 
-// Mobile fieldpulse
+// Mobile jobsite
 const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
-await mobile.goto("http://127.0.0.1:8080/fieldpulse", { waitUntil: "networkidle" });
+await mobile.goto("http://127.0.0.1:8080/jobsite", { waitUntil: "networkidle" });
 await mobile.waitForTimeout(400);
 await mobile.screenshot({ path: "/workspace/screenshots/fp-mobile.png", fullPage: true });
 const overflow = await mobile.evaluate(
@@ -88,7 +88,7 @@ const overflow = await mobile.evaluate(
 console.log(
   JSON.stringify(
     {
-      fieldpulse: {
+      jobsite: {
         hasPlain,
         hasGlossary,
         hasP0,

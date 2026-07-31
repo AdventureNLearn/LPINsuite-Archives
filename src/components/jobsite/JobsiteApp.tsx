@@ -35,17 +35,17 @@ import { AppShell } from "@/components/AppShell";
 import {
   ProjectView,
   UsScopeBanner,
-} from "@/components/fieldpulse/ProjectPanel";
-import { MaterialsView } from "@/components/fieldpulse/MaterialsView";
-import { ScheduleView } from "@/components/fieldpulse/ScheduleView";
-import { ContactsView } from "@/components/fieldpulse/ContactsView";
+} from "@/components/jobsite/ProjectPanel";
+import { MaterialsView } from "@/components/jobsite/MaterialsView";
+import { ScheduleView } from "@/components/jobsite/ScheduleView";
+import { ContactsView } from "@/components/jobsite/ContactsView";
 import {
   HarborRulesCard,
   IntegrityNotice,
 } from "@/components/integrity/HarborRules";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FIELDPULSE_KERNEL_LINES } from "@/lib/integrity";
+import { JOBSITE_KERNEL_LINES } from "@/lib/integrity";
 import {
   buildActivityWire,
   buildDeskSummary,
@@ -66,27 +66,27 @@ import {
   sortReports,
   statusLabel,
   urgencyLabel,
-} from "@/lib/fieldpulse/domain";
+} from "@/lib/jobsite/domain";
 import {
   buildMailtoHref,
   downloadPack,
   openPrintPacket,
-} from "@/lib/fieldpulse/pack";
+} from "@/lib/jobsite/pack";
 import {
   printBoard,
   printFullProject,
   printReport,
-} from "@/lib/fieldpulse/pdf";
+} from "@/lib/jobsite/pdf";
 import {
   fileToReportPhoto,
   MAX_PHOTOS_PER_REPORT,
-} from "@/lib/fieldpulse/photos";
-import { useFieldpulseStore } from "@/lib/fieldpulse/store";
+} from "@/lib/jobsite/photos";
+import { useJobsiteStore } from "@/lib/jobsite/store";
 import type {
   ActivityItem,
   AuthorityMessage,
   FieldReport,
-  FieldpulseView,
+  JobsiteView,
   Inspection,
   InspectionStatus,
   MessageDirection,
@@ -95,11 +95,11 @@ import type {
   ReportPhoto,
   Role,
   Urgency,
-} from "@/lib/fieldpulse/types";
+} from "@/lib/jobsite/types";
 import { cn } from "@/lib/utils";
 
-export function FieldpulseApp() {
-  const view = useFieldpulseStore((s) => s.view);
+export function JobsiteApp() {
+  const view = useJobsiteStore((s) => s.view);
 
   return (
     <AppShell active="jobsite" mobileNav={<JobsiteBottomNav />}>
@@ -148,7 +148,7 @@ export function FieldpulseApp() {
 }
 
 const NAV_ITEMS: {
-  id: FieldpulseView;
+  id: JobsiteView;
   label: string;
   short: string;
   icon: React.ReactNode;
@@ -204,10 +204,10 @@ const NAV_ITEMS: {
 ];
 
 function JobsiteBottomNav() {
-  const view = useFieldpulseStore((s) => s.view);
-  const setView = useFieldpulseStore((s) => s.setView);
-  const reports = useFieldpulseStore((s) => s.jobsite.reports);
-  const messages = useFieldpulseStore((s) => s.jobsite.messages);
+  const view = useJobsiteStore((s) => s.view);
+  const setView = useJobsiteStore((s) => s.setView);
+  const reports = useJobsiteStore((s) => s.jobsite.reports);
+  const messages = useJobsiteStore((s) => s.jobsite.messages);
   const p0Open = reports.filter(
     (r) => r.priority === "P0" && r.status !== "resolved",
   ).length;
@@ -250,8 +250,8 @@ function JobsiteBottomNav() {
   );
 }
 
-function DesktopNav({ active }: { active: FieldpulseView }) {
-  const setView = useFieldpulseStore((s) => s.setView);
+function DesktopNav({ active }: { active: JobsiteView }) {
+  const setView = useJobsiteStore((s) => s.setView);
   return (
     <div
       className="hidden gap-1 rounded-2xl border border-[color-mix(in_oklab,var(--color-gold)_18%,var(--color-border))] bg-surface p-1 md:grid md:grid-cols-4 lg:grid-cols-8"
@@ -281,7 +281,7 @@ function DesktopNav({ active }: { active: FieldpulseView }) {
 }
 
 function BackToFeed() {
-  const setView = useFieldpulseStore((s) => s.setView);
+  const setView = useJobsiteStore((s) => s.setView);
   return (
     <button
       type="button"
@@ -401,7 +401,7 @@ function VisibilityMeter({
 }
 
 function ReadinessBanner({ jobsiteId }: { jobsiteId: string }) {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
+  const jobsite = useJobsiteStore((s) => s.jobsite);
   const ready = useMemo(() => evaluateReadiness(jobsite), [jobsite, jobsiteId]);
 
   return (
@@ -428,11 +428,11 @@ function ReadinessBanner({ jobsiteId }: { jobsiteId: string }) {
 }
 
 function FeedView() {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
-  const role = useFieldpulseStore((s) => s.role);
-  const setRole = useFieldpulseStore((s) => s.setRole);
-  const setView = useFieldpulseStore((s) => s.setView);
-  const startNewProject = useFieldpulseStore((s) => s.startNewProject);
+  const jobsite = useJobsiteStore((s) => s.jobsite);
+  const role = useJobsiteStore((s) => s.role);
+  const setRole = useJobsiteStore((s) => s.setRole);
+  const setView = useJobsiteStore((s) => s.setView);
+  const startNewProject = useJobsiteStore((s) => s.startNewProject);
   const [confirmBlank, setConfirmBlank] = useState(false);
   const reports = jobsite.reports;
   const messages = jobsite.messages;
@@ -694,7 +694,7 @@ function FeedView() {
 }
 
 function WiredLanesCompact() {
-  const setView = useFieldpulseStore((s) => s.setView);
+  const setView = useJobsiteStore((s) => s.setView);
   const lanes = [
     {
       id: "report" as const,
@@ -744,8 +744,8 @@ function WiredLanesCompact() {
 }
 
 function ActivityRow({ item }: { item: ActivityItem }) {
-  const setView = useFieldpulseStore((s) => s.setView);
-  const target: FieldpulseView =
+  const setView = useJobsiteStore((s) => s.setView);
+  const target: JobsiteView =
     item.kind === "message"
       ? "messages"
       : item.kind === "inspection"
@@ -815,7 +815,7 @@ function GlossaryStrip() {
           <strong className="text-fg">Wired</strong> — One action creates a
           record in another lane (report → message, inspection → message).
         </li>
-        {FIELDPULSE_KERNEL_LINES.map((line) => (
+        {JOBSITE_KERNEL_LINES.map((line) => (
           <li key={line} className="text-pretty">
             {line}
           </li>
@@ -847,12 +847,12 @@ function ReportCard({
   index: number;
   showActions?: boolean;
 }) {
-  const markSeen = useFieldpulseStore((s) => s.markSeen);
-  const resolveReport = useFieldpulseStore((s) => s.resolveReport);
-  const reopenReport = useFieldpulseStore((s) => s.reopenReport);
-  const messageAboutReport = useFieldpulseStore((s) => s.messageAboutReport);
-  const setView = useFieldpulseStore((s) => s.setView);
-  const role = useFieldpulseStore((s) => s.role);
+  const markSeen = useJobsiteStore((s) => s.markSeen);
+  const resolveReport = useJobsiteStore((s) => s.resolveReport);
+  const reopenReport = useJobsiteStore((s) => s.reopenReport);
+  const messageAboutReport = useJobsiteStore((s) => s.messageAboutReport);
+  const setView = useJobsiteStore((s) => s.setView);
+  const role = useJobsiteStore((s) => s.role);
 
   return (
     <article
@@ -974,7 +974,7 @@ function ReportCard({
             variant="outline"
             onClick={() => {
               try {
-                printReport(useFieldpulseStore.getState().jobsite, report);
+                printReport(useJobsiteStore.getState().jobsite, report);
                 toast.message("Print field note — Save as PDF.");
               } catch (err) {
                 toast.error(err instanceof Error ? err.message : "Print failed.");
@@ -1007,9 +1007,9 @@ function EmptyFeed({ onCompose }: { onCompose: () => void }) {
 }
 
 function ReportView() {
-  const addReport = useFieldpulseStore((s) => s.addReport);
-  const role = useFieldpulseStore((s) => s.role);
-  const setView = useFieldpulseStore((s) => s.setView);
+  const addReport = useJobsiteStore((s) => s.addReport);
+  const role = useJobsiteStore((s) => s.role);
+  const setView = useJobsiteStore((s) => s.setView);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [priority, setPriority] = useState<Priority>("P1");
@@ -1302,10 +1302,10 @@ function ReportView() {
 }
 
 function MessagesView() {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
-  const role = useFieldpulseStore((s) => s.role);
-  const sendMessage = useFieldpulseStore((s) => s.sendMessage);
-  const markMessageRead = useFieldpulseStore((s) => s.markMessageRead);
+  const jobsite = useJobsiteStore((s) => s.jobsite);
+  const role = useJobsiteStore((s) => s.role);
+  const sendMessage = useJobsiteStore((s) => s.sendMessage);
+  const markMessageRead = useJobsiteStore((s) => s.markMessageRead);
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [authorName, setAuthorName] = useState("Project desk");
@@ -1485,9 +1485,9 @@ function MessageCard({
 }
 
 function InspectionsView() {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
-  const requestInspection = useFieldpulseStore((s) => s.requestInspection);
-  const updateInspectionStatus = useFieldpulseStore(
+  const jobsite = useJobsiteStore((s) => s.jobsite);
+  const requestInspection = useJobsiteStore((s) => s.requestInspection);
+  const updateInspectionStatus = useJobsiteStore(
     (s) => s.updateInspectionStatus,
   );
   const sorted = useMemo(
@@ -1680,8 +1680,8 @@ function InspectionCard({
 }
 
 function DeskView() {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
-  const setView = useFieldpulseStore((s) => s.setView);
+  const jobsite = useJobsiteStore((s) => s.jobsite);
+  const setView = useJobsiteStore((s) => s.setView);
   const reports = jobsite.reports;
   const sorted = useMemo(() => sortReports(reports), [reports]);
   const needsSeen = sorted.filter(

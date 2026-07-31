@@ -7,34 +7,34 @@ import {
   divisionLabel,
   scheduleStatusLabel,
   TRADE_DIVISIONS,
-} from "@/lib/fieldpulse/divisions";
+} from "@/lib/jobsite/divisions";
 import {
   buildGanttBars,
   computeGanttWindow,
   formatYmd,
   todayMarkerLeft,
   todayYmd,
-} from "@/lib/fieldpulse/gantt";
-import { printSchedule } from "@/lib/fieldpulse/pdf";
+} from "@/lib/jobsite/gantt";
+import { printSchedule } from "@/lib/jobsite/pdf";
 import {
   CONSTRUCTION_INDUSTRIES,
   industryLabel,
-} from "@/lib/fieldpulse/schedules";
-import { useFieldpulseStore } from "@/lib/fieldpulse/store";
+} from "@/lib/jobsite/schedules";
+import { useJobsiteStore } from "@/lib/jobsite/store";
 import type {
   ConstructionIndustry,
   ScheduleTaskStatus,
   TradeDivision,
-} from "@/lib/fieldpulse/types";
+} from "@/lib/jobsite/types";
 import { cn } from "@/lib/utils";
 
 export function ScheduleView() {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
-  const addScheduleTask = useFieldpulseStore((s) => s.addScheduleTask);
-  const updateScheduleTask = useFieldpulseStore((s) => s.updateScheduleTask);
-  const removeScheduleTask = useFieldpulseStore((s) => s.removeScheduleTask);
-  const applyIndustrySchedule = useFieldpulseStore((s) => s.applyIndustrySchedule);
-  const setView = useFieldpulseStore((s) => s.setView);
+  const jobsite = useJobsiteStore((s) => s.jobsite);
+  const addScheduleTask = useJobsiteStore((s) => s.addScheduleTask);
+  const updateScheduleTask = useJobsiteStore((s) => s.updateScheduleTask);
+  const removeScheduleTask = useJobsiteStore((s) => s.removeScheduleTask);
+  const applyIndustrySchedule = useJobsiteStore((s) => s.applyIndustrySchedule);
+  const setView = useJobsiteStore((s) => s.setView);
   const [industryPick, setIndustryPick] = useState<ConstructionIndustry>(
     jobsite.industry ?? "multi_family",
   );

@@ -302,7 +302,7 @@ export interface ProjectIdentity {
   materialsBudget?: number;
 }
 
-export type FieldpulseView =
+export type JobsiteView =
   | "feed"
   | "report"
   | "messages"
@@ -347,10 +347,12 @@ export interface ActivityItem {
   wired: boolean;
 }
 
-export interface FieldpulsePack {
+export interface JobsitePack {
+  /** Primary format is lpin-jobsite-pack. fieldpulse-pack is import-only legacy. */
   format: "lpin-jobsite-pack" | "fieldpulse-pack";
   version: 1;
   exportedAt: string;
+  /** Primary app id is lpin-jobsite. fieldpulse is import-only legacy. */
   app: "lpin-jobsite" | "fieldpulse";
   productRegion: "US";
   disclaimer: string;

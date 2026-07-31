@@ -10,10 +10,10 @@ page.on("console", (m) => {
   if (m.type() === "error") errors.push(m.text());
 });
 
-await page.goto("http://127.0.0.1:8080/fieldpulse", { waitUntil: "networkidle" });
+await page.goto("http://127.0.0.1:8080/jobsite", { waitUntil: "networkidle" });
 await page.evaluate(() => {
-  localStorage.removeItem("aos-fieldpulse-v2");
-  localStorage.removeItem("aos-fieldpulse-v3");
+  localStorage.removeItem("lpin-jobsite-v1");
+  localStorage.removeItem("lpin-jobsite-v1");
 });
 await page.reload({ waitUntil: "networkidle" });
 await page.waitForTimeout(500);

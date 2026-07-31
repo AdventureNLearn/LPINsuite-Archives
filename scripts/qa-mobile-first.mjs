@@ -43,45 +43,45 @@ async function checkPage(name, url, mobile, actions) {
   return { text, overflow, len: text.length };
 }
 
-// Fieldpulse mobile dashboard
+// Jobsite mobile dashboard
 const fpM = await checkPage(
   "fp-mobile-dash",
-  "http://127.0.0.1:8080/fieldpulse",
+  "http://127.0.0.1:8080/jobsite",
   true,
   async (page) => {
-    await page.evaluate(() => localStorage.removeItem("aos-fieldpulse-v3"));
+    await page.evaluate(() => localStorage.removeItem("lpin-jobsite-v1"));
     await page.reload({ waitUntil: "networkidle" });
     await page.waitForTimeout(300);
     // bottom nav should exist
   },
 );
 
-// Fieldpulse mobile report form
+// Jobsite mobile report form
 const fpR = await checkPage(
   "fp-mobile-report",
-  "http://127.0.0.1:8080/fieldpulse",
+  "http://127.0.0.1:8080/jobsite",
   true,
   async (page) => {
-    await page.evaluate(() => localStorage.removeItem("aos-fieldpulse-v3"));
+    await page.evaluate(() => localStorage.removeItem("lpin-jobsite-v1"));
     await page.reload({ waitUntil: "networkidle" });
     await page.getByRole("button", { name: /^Report$/i }).first().click();
     await page.waitForTimeout(300);
   },
 );
 
-// Fieldpulse desktop dashboard
+// Jobsite desktop dashboard
 const fpD = await checkPage(
   "fp-desktop-dash",
-  "http://127.0.0.1:8080/fieldpulse",
+  "http://127.0.0.1:8080/jobsite",
   false,
   async (page) => {
-    await page.evaluate(() => localStorage.removeItem("aos-fieldpulse-v3"));
+    await page.evaluate(() => localStorage.removeItem("lpin-jobsite-v1"));
     await page.reload({ waitUntil: "networkidle" });
     await page.waitForTimeout(300);
   },
 );
 
-// Claimcard mobile board
+// Claims mobile board
 const ccM = await checkPage(
   "cc-mobile-board",
   "http://127.0.0.1:8080/claimcard",
@@ -92,7 +92,7 @@ const ccM = await checkPage(
   },
 );
 
-// Claimcard desktop board
+// Claims desktop board
 const ccD = await checkPage(
   "cc-desktop-board",
   "http://127.0.0.1:8080/claimcard",
@@ -140,7 +140,7 @@ console.log(
         overflow: ccD.overflow,
       },
       homeMobile: {
-        hasApps: homeM.text.includes("Claimcard") && homeM.text.includes("Fieldpulse"),
+        hasApps: homeM.text.includes("Claims") && homeM.text.includes("Jobsite"),
         mobileFirst: homeM.text.includes("Mobile-first") || homeM.text.includes("hand first"),
         overflow: homeM.overflow,
       },

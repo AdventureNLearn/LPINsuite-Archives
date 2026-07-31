@@ -80,7 +80,7 @@ Operator skills may still use their own language **in SuperGrok private work**. 
 | `src/lib/integrity/` | Kernel types, harbor copy, public footer, framing checks |
 | `src/components/integrity/` | Shared HarborRules / IntegrityNotice UI |
 | `src/lib/claimcard/domain.ts` | Tri-state + Layer-0 + secular export |
-| `src/lib/fieldpulse/domain.ts` | Visibility gap + readiness gate |
+| `src/lib/jobsite/domain.ts` | Visibility gap + readiness gate |
 
 ## Operator note
 

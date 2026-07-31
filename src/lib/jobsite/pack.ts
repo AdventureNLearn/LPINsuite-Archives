@@ -4,12 +4,12 @@
 
 import { sanitizeForPublicSurface } from "@/lib/integrity";
 import { newId } from "./domain";
-import type { FieldpulsePack, Jobsite } from "./types";
+import type { JobsitePack, Jobsite } from "./types";
 
 export const PACK_DISCLAIMER =
   "LPIN Suite Jobsite project pack (United States). Team board only — not a city/county system of record. Not legal advice. A person owns every status.";
 
-export function buildPack(jobsite: Jobsite): FieldpulsePack {
+export function buildPack(jobsite: Jobsite): JobsitePack {
   return {
     format: "lpin-jobsite-pack",
     version: 1,
