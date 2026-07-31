@@ -515,12 +515,11 @@ export function ProjectView() {
       </section>
 
       {(() => {
+        // Live panel follows the form State only — city/permit freeform never override.
+        const stCode = form.stateCode;
         const pack = resolveAhjCodePack({
-          stateCode: form.stateCode || jobsite.stateCode,
-          cityState: form.cityState || jobsite.cityState,
-          permittingOffice: form.permittingOffice || jobsite.permittingOffice,
+          stateCode: stCode,
         });
-        const stCode = form.stateCode || jobsite.stateCode;
         // guidanceMetaTick forces re-read after cache refresh
         void guidanceMetaTick;
         const cycle = resolveStateCodeCycleWithCache(stCode);
