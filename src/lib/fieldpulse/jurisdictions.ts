@@ -21,7 +21,7 @@ export const US_STATES: UsState[] = [
   { code: "CT", name: "Connecticut" },
   { code: "DE", name: "Delaware" },
   { code: "DC", name: "District of Columbia", note: "Local code under DCRA" },
-  { code: "FL", name: "Florida", note: "Statewide Florida Building Code (FBC)" },
+  { code: "FL", name: "Florida", note: "Statewide FBC — local admin; HVHZ product rules on coast" },
   { code: "GA", name: "Georgia" },
   { code: "HI", name: "Hawaii" },
   { code: "ID", name: "Idaho" },

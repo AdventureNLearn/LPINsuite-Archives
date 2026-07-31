@@ -139,16 +139,17 @@ export const STATE_CODE_CYCLES: Record<string, StateCodeCycleMeta> = {
   FL: {
     stateCode: "FL",
     typicalCycleYears: 3,
-    modelBase: "Florida Building Code (FBC) \u2014 8th Edition (2023) based on 2021 I-Codes",
+    modelBase: "Florida Building Code (FBC) — 8th Edition (2023), based on 2021 I-Codes",
     lastKnownEffective: "2023-12-31",
-    nextExpectedWindow: "9th Edition (2026) process underway \u2014 confirm effective date with AHJ",
-    packVersion: "1.0.2",
+    nextExpectedWindow: "9th Edition (2026) Florida Building Commission process — confirm effective date printed on the permit / with the AHJ",
+    packVersion: "1.1.0",
     notes: [
-      "Florida updates the statewide FBC on an approximately three-year cycle.",
-      "Local building departments administer the FBC; HVHZ rules add product approvals.",
-      "Confirm the current edition and local admin process with the AHJ before permit work."
+      "Florida updates the statewide FBC through the Florida Building Commission on an approximately three-year cycle.",
+      "Local building departments administer permits and inspections under the FBC; they do not each invent a separate statewide code.",
+      "HVHZ (e.g. Miami-Dade, Broward) adds product-approval rules on top of the base FBC path.",
+      "Always confirm the edition year and any local administrative procedures before rough-in and envelope work.",
     ],
-    sourceHint: "Florida Building Commission update process",
+    sourceHint: "Florida Building Commission / local building department",
   },
   GA: {
     stateCode: "GA",

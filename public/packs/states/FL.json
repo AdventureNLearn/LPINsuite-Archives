@@ -2,32 +2,35 @@
   "format": "lpin-jurisdiction-pack",
   "version": 1,
   "stateCode": "FL",
-  "packVersion": "1.0.2",
-  "updatedAt": "2026-07-31T10:30:15Z",
+  "packVersion": "1.1.0",
+  "updatedAt": "2026-07-31T10:51:13Z",
   "cycle": {
     "stateCode": "FL",
     "typicalCycleYears": 3,
-    "modelBase": "Florida Building Code (FBC) \u2014 8th Edition (2023) based on 2021 I-Codes",
-    "nextExpectedWindow": "9th Edition (2026) process underway \u2014 confirm effective date with AHJ",
-    "packVersion": "1.0.2",
+    "modelBase": "Florida Building Code (FBC) \u2014 8th Edition (2023), based on 2021 I-Codes",
+    "lastKnownEffective": "2023-12-31",
+    "nextExpectedWindow": "9th Edition (2026) Florida Building Commission process \u2014 confirm effective date printed on the permit / with the AHJ",
+    "packVersion": "1.1.0",
     "notes": [
-      "Florida updates the statewide FBC on an approximately three-year cycle.",
-      "Local building departments administer the FBC; HVHZ rules add product approvals.",
-      "Confirm the current edition and local admin process with the AHJ before permit work."
+      "Florida updates the statewide FBC through the Florida Building Commission on an approximately three-year cycle.",
+      "Local building departments administer permits and inspections under the FBC.",
+      "HVHZ (e.g. Miami-Dade, Broward) adds product-approval rules on top of the base FBC path.",
+      "Always confirm the edition year and local administrative procedures before rough-in and envelope work."
     ],
-    "sourceHint": "Florida Building Commission update process",
-    "lastKnownEffective": "2023-12-31"
+    "sourceHint": "Florida Building Commission / local building department"
   },
   "modelCodes": [
-    "Florida Building Code (FBC) \u2014 Building",
+    "Florida Building Code (FBC) 8th Edition (2023) \u2014 Building",
     "FBC Residential",
     "FBC Existing Building",
-    "NEC as adopted in FBC",
-    "Florida Fire Prevention Code"
+    "FBC Energy Conservation",
+    "NEC as adopted in the FBC",
+    "Florida Fire Prevention Code (FFPC)"
   ],
   "notes": [
-    "Refreshable guidance pack for Florida \u2014 not a live code text.",
-    "Confirm the adopted edition and any local amendments with the AHJ.",
-    "County / municipal details stay freeform or user-side."
+    "Gold-standard Florida guidance pack \u2014 field process, not a live code text.",
+    "Statewide FBC with local administration; type city/county freeform for your AHJ name.",
+    "Roof, openings, and product approvals are frequent coastal / HVHZ hold points.",
+    "Confirm the adopted edition and any local procedures with the building department."
   ]
 }
