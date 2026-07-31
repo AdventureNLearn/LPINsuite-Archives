@@ -432,6 +432,8 @@ function FeedView() {
   const role = useFieldpulseStore((s) => s.role);
   const setRole = useFieldpulseStore((s) => s.setRole);
   const setView = useFieldpulseStore((s) => s.setView);
+  const startNewProject = useFieldpulseStore((s) => s.startNewProject);
+  const [confirmBlank, setConfirmBlank] = useState(false);
   const reports = jobsite.reports;
   const messages = jobsite.messages;
   const inspections = jobsite.inspections;
@@ -514,18 +516,72 @@ function FeedView() {
 
       <UsScopeBanner compact />
       {jobsite.isDemo ? (
-        <p className="rounded-xl border border-unproven/30 bg-unproven/10 px-3 py-2 text-xs text-fg-muted text-pretty">
-          <strong className="font-medium text-unproven">Sample board.</strong>{" "}
-          Walk the wired lanes, then open{" "}
-          <button
-            type="button"
-            className="font-medium text-gold underline-offset-2 hover:underline"
-            onClick={() => setView("project")}
-          >
-            Jobsite setup
-          </button>{" "}
-          to start your own project or import a pack.
-        </p>
+        <div className="space-y-2 rounded-xl border border-unproven/30 bg-unproven/10 px-3 py-3 text-xs text-fg-muted text-pretty">
+          <p>
+            <strong className="font-medium text-unproven">Sample board.</strong>{" "}
+            Walk the wired lanes, then start a blank jobsite for real work — or open{" "}
+            <button
+              type="button"
+              className="font-medium text-gold underline-offset-2 hover:underline"
+              onClick={() => setView("project")}
+            >
+              Jobsite setup
+            </button>
+            .
+          </p>
+          {!confirmBlank ? (
+            <Button
+              type="button"
+              size="sm"
+              className="w-full sm:w-auto"
+              onClick={() => setConfirmBlank(true)}
+            >
+              Start blank jobsite
+            </Button>
+          ) : (
+            <div
+              className="space-y-2 rounded-lg border border-disputed/40 bg-disputed/10 p-3"
+              role="alertdialog"
+              aria-label="Confirm blank jobsite"
+            >
+              <p className="text-sm font-medium text-fg">
+                Replace the sample board with a blank jobsite?
+              </p>
+              <p className="text-[11px] text-fg-muted">
+                Sample reports and inspections will be cleared on this device.
+                Export a pack first if you need a backup.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => {
+                    startNewProject({
+                      name: "My jobsite",
+                      location: "United States",
+                      permitNumber: "TBD",
+                      permittingOffice: "City / County Building Department",
+                      stateCode: undefined,
+                      cityState: undefined,
+                    });
+                    setConfirmBlank(false);
+                    setView("project");
+                  }}
+                >
+                  Yes — start blank jobsite
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setConfirmBlank(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       ) : null}
       <GlossaryStrip />
       <RoleToggle role={role} onChange={setRole} />

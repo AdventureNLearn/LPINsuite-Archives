@@ -260,7 +260,19 @@ export const useFieldpulseStore = create<FieldpulseState>()(
 
       startNewProject: (identity) =>
         set({
-          jobsite: createEmptyJobsite(identity),
+          // touch() guarantees materials/schedule arrays for every lane after blank
+          jobsite: touch(
+            createEmptyJobsite({
+              name: "My jobsite",
+              location: "United States",
+              permitNumber: "TBD",
+              permittingOffice: "City / County Building Department",
+              ...identity,
+              // Blank board never inherits demo state or a pre-picked state code
+              stateCode: identity?.stateCode,
+              cityState: identity?.cityState,
+            }),
+          ),
           view: "project",
           role: "field",
           composeReportId: undefined,
