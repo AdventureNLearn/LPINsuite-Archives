@@ -85,3 +85,7 @@ Operator skills may still use their own language **in SuperGrok private work**. 
 ## Operator note
 
 SuperGrok skills remain the design/verification engine. This contract is the **export filter** so strong reasoning powers the apps without skill takeover or political/religious public framing.
+
+## Geographic agnosticism (OPSEC)
+
+Shipped product copy, packs, demos, and free-resource links must not name real municipalities or hometowns as examples. State-level guidance is fine. Users type their own city/county freeform. Enforce with `npm run opsec:check`.

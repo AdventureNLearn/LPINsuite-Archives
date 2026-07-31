@@ -19,7 +19,9 @@
     "build:with-db": "vite build && node scripts/migrate.mjs",
     "qa": "node scripts/qa-lpin-suite.mjs",
     "qa:legacy": "node scripts/qa-apps.mjs",
-    "test:e2e": "node scripts/qa-lpin-suite.mjs"
+    "test:e2e": "node scripts/qa-lpin-suite.mjs",
+    "opsec:check": "node scripts/opsec-geo-check.mjs",
+    "qa:full": "npm run opsec:check && npm run qa"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.3",

@@ -7,11 +7,11 @@
   "cycle": {
     "stateCode": "IL",
     "typicalCycleYears": null,
-    "modelBase": "Local adoption; Chicago has a distinct path",
-    "nextExpectedWindow": "Local only \u2014 Chicago separate",
+    "modelBase": "Local adoption of model codes; some municipalities maintain distinct paths",
+    "nextExpectedWindow": "Local only \u2014 varies by municipality",
     "packVersion": "1.0.0",
     "notes": [
-      "Most of Illinois is local adoption; Chicago maintains its own code path.",
+      "Most of Illinois is local adoption; some large municipalities maintain distinct code paths.",
       "Confirm the municipal adopted edition and amendments."
     ],
     "sourceHint": "Local municipal AHJ"

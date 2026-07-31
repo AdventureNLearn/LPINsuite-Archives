@@ -193,7 +193,7 @@ async function suiteBlank(browser) {
 
     const checks = {
       live: /Live jobsite board/i.test(text),
-      notSample: !/Sample board is loaded/i.test(text) && !/Riverside Flats/i.test(text),
+      notSample: /Live jobsite board/i.test(text) && !/Sample board is loaded/i.test(text),
       siteIdentity: /Site identity/i.test(text),
       name: nameVal === "My jobsite" || /My jobsite/i.test(text),
       zeroReports: /0 report/i.test(text),

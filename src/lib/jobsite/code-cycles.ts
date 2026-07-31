@@ -96,7 +96,7 @@ export const STATE_CODE_CYCLES: Record<string, StateCodeCycleMeta> = {
     packVersion: "1.0.0",
     notes: [
       "Colorado is largely local AHJ adoption; snow load and energy vary by elevation.",
-      "Denver and other cities publish local amendments."
+      "Local amendments vary by municipality — confirm with the local AHJ."
     ],
     sourceHint: "Local municipal AHJ",
   },
@@ -203,11 +203,11 @@ export const STATE_CODE_CYCLES: Record<string, StateCodeCycleMeta> = {
   IL: {
     stateCode: "IL",
     typicalCycleYears: null,
-    modelBase: "Local adoption; Chicago has a distinct path",
-    nextExpectedWindow: "Local only \u2014 Chicago separate",
+    modelBase: "Local adoption of model codes; some municipalities maintain distinct paths",
+    nextExpectedWindow: "Local only \u2014 varies by municipality",
     packVersion: "1.0.0",
     notes: [
-      "Most of Illinois is local adoption; Chicago maintains its own code path.",
+      "Most of Illinois is local adoption; some large municipalities maintain distinct code paths.",
       "Confirm the municipal adopted edition and amendments."
     ],
     sourceHint: "Local municipal AHJ",
@@ -446,12 +446,12 @@ export const STATE_CODE_CYCLES: Record<string, StateCodeCycleMeta> = {
   NY: {
     stateCode: "NY",
     typicalCycleYears: 3,
-    modelBase: "NYS Uniform Code (outside NYC)",
-    nextExpectedWindow: "State update cycle; NYC has a separate path",
+    modelBase: "NYS Uniform Code (statewide framework)",
+    nextExpectedWindow: "State update cycle; some large municipalities differ",
     packVersion: "1.0.0",
     notes: [
-      "Outside NYC, the Uniform Code is statewide with local enforcement.",
-      "New York City uses its own Construction Codes \u2014 use the NYC path there."
+      "The Uniform Code is the statewide framework with local enforcement.",
+      "Some large municipalities maintain separate construction codes \u2014 confirm with the local AHJ."
     ],
     sourceHint: "NYS Department of State / local code enforcement",
   },
