@@ -22,6 +22,7 @@ import {
 import {
   US_JURISDICTION_TEMPLATES,
   US_PRODUCT_NOTICE,
+  US_STATES,
 } from "@/lib/fieldpulse/jurisdictions";
 import {
   buildMailtoHref,
@@ -41,6 +42,10 @@ import {
   CODE_DISCLAIMER,
   resolveAhjCodePack,
 } from "@/lib/fieldpulse/codes";
+import {
+  cycleStalenessMessage,
+  resolveStateCodeCycle,
+} from "@/lib/fieldpulse/code-cycles";
 import { todayYmd } from "@/lib/fieldpulse/gantt";
 import { cn } from "@/lib/utils";
 
@@ -97,7 +102,6 @@ export function ProjectView() {
 
   const [form, setForm] = useState(() => syncFormFromJobsite(jobsite));
   const [templateId, setTemplateId] = useState("us-custom");
-  /** In-app confirm step — window.confirm is blocked in many previews */
   const [pendingAction, setPendingAction] = useState<
     null | "blank" | "demo"
   >(null);
@@ -111,7 +115,6 @@ export function ProjectView() {
     jobsite.materialsBudget != null ? String(jobsite.materialsBudget) : "",
   );
 
-  // Keep fields in sync when the stored project is replaced (blank / import / demo)
   useEffect(() => {
     setForm(syncFormFromJobsite(jobsite));
     setIndustry(jobsite.industry ?? "");
@@ -336,6 +339,33 @@ export function ProjectView() {
           <h2 className="text-sm font-medium text-fg">Site identity</h2>
         </div>
 
+        {/* Primary: State from full US_STATES */}
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium text-fg-muted">State</span>
+          <select
+            className="field-input"
+            value={form.stateCode}
+            onChange={(e) => {
+              const code = e.target.value;
+              setField("stateCode", code);
+              setTemplateId("us-custom");
+            }}
+          >
+            <option value="">— select state —</option>
+            {US_STATES.map((s) => (
+              <option key={s.code} value={s.code}>
+                {s.name} ({s.code})
+              </option>
+            ))}
+          </select>
+          {US_STATES.find((s) => s.code === form.stateCode)?.note ? (
+            <span className="block text-[11px] text-fg-subtle">
+              {US_STATES.find((s) => s.code === form.stateCode)!.note}
+            </span>
+          ) : null}
+        </label>
+
+        {/* Secondary: optional city / county starter */}
         <label className="block space-y-1.5">
           <span className="text-sm font-medium text-fg-muted">
             City / county starter (optional)
@@ -352,7 +382,7 @@ export function ProjectView() {
             ))}
           </select>
           <span className="block text-[11px] text-fg-subtle">
-            Fills building-department name only — not a live city portal.
+            Fills building-department name only — not a live city portal. County / muni details stay freeform or user-side.
           </span>
         </label>
 
@@ -399,7 +429,7 @@ export function ProjectView() {
             />
           </label>
           <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-fg-muted">State</span>
+            <span className="text-sm font-medium text-fg-muted">State code</span>
             <input
               className="field-input"
               value={form.stateCode}
@@ -439,7 +469,6 @@ export function ProjectView() {
             placeholder="Shift handoff, laydown yard, access, etc."
           />
         </label>
-
 
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="block space-y-1.5">
@@ -521,6 +550,8 @@ export function ProjectView() {
           cityState: form.cityState || jobsite.cityState,
           permittingOffice: form.permittingOffice || jobsite.permittingOffice,
         });
+        const cycle = resolveStateCodeCycle(form.stateCode || jobsite.stateCode);
+        const cycleNote = cycleStalenessMessage(cycle);
         return (
           <section className="card-lpin space-y-3 rounded-2xl p-4 sm:p-6">
             <h2 className="text-sm font-medium text-fg">
@@ -530,6 +561,11 @@ export function ProjectView() {
             <p className="text-xs text-fg-muted text-pretty">
               {pack.ahjName}
             </p>
+            {cycleNote ? (
+              <p className="rounded-lg border border-unproven/30 bg-unproven/10 px-3 py-2 text-[11px] text-fg-muted text-pretty">
+                {cycleNote}
+              </p>
+            ) : null}
             <ul className="space-y-1 text-xs text-fg-muted">
               {pack.modelCodes.map((c) => (
                 <li key={c}>· {c}</li>
@@ -562,7 +598,6 @@ export function ProjectView() {
           </section>
         );
       })()}
-
 
       <section className="card-lpin space-y-3 rounded-2xl p-4 sm:p-6">
         <h2 className="flex items-center gap-2 text-sm font-medium text-fg">
