@@ -609,9 +609,8 @@ export function ProjectView() {
                 disabled={guidanceBusy}
                 onClick={() => {
                   setGuidanceBusy(true);
-                  void checkGuidanceUpdates(
-                    stCode ? { stateCode: stCode } : undefined,
-                  )
+                  // Always pull full manifest (all states) so device cache stays complete.
+                  void checkGuidanceUpdates()
                     .then((result) => {
                       if (!result.ok) {
                         toast.error(result.error);

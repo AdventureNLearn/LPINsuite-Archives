@@ -2,21 +2,21 @@
   "format": "lpin-jurisdiction-pack",
   "version": 1,
   "stateCode": "FL",
-  "packVersion": "1.0.1",
-  "updatedAt": "2026-07-31T10:10:50Z",
+  "packVersion": "1.0.2",
+  "updatedAt": "2026-07-31T10:30:15Z",
   "cycle": {
     "stateCode": "FL",
     "typicalCycleYears": 3,
     "modelBase": "Florida Building Code (FBC) \u2014 8th Edition (2023) based on 2021 I-Codes",
-    "lastKnownEffective": "2023-12-31",
     "nextExpectedWindow": "9th Edition (2026) process underway \u2014 confirm effective date with AHJ",
-    "packVersion": "1.0.1",
+    "packVersion": "1.0.2",
     "notes": [
       "Florida updates the statewide FBC on an approximately three-year cycle.",
       "Local building departments administer the FBC; HVHZ rules add product approvals.",
       "Confirm the current edition and local admin process with the AHJ before permit work."
     ],
-    "sourceHint": "Florida Building Commission update process"
+    "sourceHint": "Florida Building Commission update process",
+    "lastKnownEffective": "2023-12-31"
   },
   "modelCodes": [
     "Florida Building Code (FBC) \u2014 Building",
@@ -26,7 +26,8 @@
     "Florida Fire Prevention Code"
   ],
   "notes": [
-    "This pack is refreshable guidance \u2014 not a live code text.",
-    "HVHZ product approvals remain a frequent hold point in coastal counties."
+    "Refreshable guidance pack for Florida \u2014 not a live code text.",
+    "Confirm the adopted edition and any local amendments with the AHJ.",
+    "County / municipal details stay freeform or user-side."
   ]
 }
