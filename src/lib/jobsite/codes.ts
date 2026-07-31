@@ -194,7 +194,7 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
     notes: [
       "Florida uses a single statewide Florida Building Code; cities and counties administer permits and inspections locally.",
       "Edition cycles run on an approximately three-year Florida Building Commission process — confirm the edition printed on your permit.",
-      "High-Velocity Hurricane Zones (notably Miami-Dade and Broward) add product-approval / NOA rules for envelope components.",
+      "High-Velocity Hurricane Zones (HVHZ), where designated, add product-approval / NOA rules for envelope components.",
       "Roof systems, openings, and wind-borne debris protection are among the most common hold points on coastal and HVHZ work.",
       "Flood design (where mapped) often runs in parallel with structural and envelope reviews — verify FIRM zone with the AHJ.",
       "This board is team guidance and a handoff pack — not a login to a city portal and not legal advice.",
@@ -244,30 +244,6 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
           "Special inspection reports",
           "Structural sign-off path",
         ],
-      },
-    ],
-  }),
-  pack({
-    id: "us-miami-fl",
-    label: "Miami-Dade, FL",
-    stateCode: "FL",
-    ahjName: "Miami-Dade County Building Department",
-    modelCodes: [
-      "Florida Building Code + HVHZ",
-      "Miami-Dade product control (NOA)",
-      "Florida Fire Prevention Code",
-    ],
-    notes: [
-      "HVHZ rules are stricter than general Florida coastal.",
-      "Product approvals (NOA) are commonly required for envelope components.",
-    ],
-    commonPermits: ["Building", "Roofing", "Electrical", "Plumbing", "Mechanical", "Fire"],
-    extraReqs: [
-      {
-        id: "md-noa",
-        title: "NOA / product control",
-        summary: "Use approved products for roof, windows, doors, and shutters as required.",
-        holdPoints: ["Roof", "Openings", "Shutters / protection"],
       },
     ],
   }),
@@ -575,7 +551,6 @@ export function resolveAhjCodePack(input: {
   const office = (input.permittingOffice || "").toLowerCase();
   const cityHits: [string, string][] = [
     ["austin", "us-austin-tx"],
-    ["miami", "us-miami-fl"],
     ["denver", "us-denver-co"],
     ["phoenix", "us-phoenix-az"],
     ["seattle", "us-seattle-wa"],

@@ -428,7 +428,7 @@ export function ProjectView() {
               className="field-input"
               value={form.cityState}
               onChange={(e) => setField("cityState", e.target.value)}
-              placeholder="e.g. Miami-Dade, Vero Beach, Tampa"
+              placeholder="County or city as your AHJ lists it"
             />
           </label>
         </div>

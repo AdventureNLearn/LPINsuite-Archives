@@ -56,10 +56,10 @@ export const JURISDICTION_PUBLIC_LINKS: Record<string, FreeResourceLink[]> = {
   ],
   FL: [
     {
-      id: "miami-dade-build",
-      label: "Miami-Dade Building (public site)",
-      url: "https://www.miamidade.gov/global/economy/building/home.page",
-      note: "County public site — verify HVHZ product rules there.",
+      id: "fl-building-commission",
+      label: "Florida Building Commission (public site)",
+      url: "https://www.floridabuilding.org/",
+      note: "State public site for the FBC process — not a local AHJ login.",
     },
   ],
   CO: [
