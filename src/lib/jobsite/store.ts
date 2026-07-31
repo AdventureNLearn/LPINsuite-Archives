@@ -4,7 +4,7 @@ import type {
   AuthorityMessage,
   ContactRole,
   FieldReport,
-  FieldpulseView,
+  JobsiteView,
   Inspection,
   InspectionStatus,
   Jobsite,
@@ -39,13 +39,13 @@ import { createDemoJobsite } from "./demo";
 import { parsePackJson } from "./pack";
 import { applyIndustryTemplate } from "./apply-template";
 
-interface FieldpulseState {
+interface JobsiteState {
   jobsite: Jobsite;
   role: Role;
-  view: FieldpulseView;
+  view: JobsiteView;
   composeReportId?: string;
   setRole: (role: Role) => void;
-  setView: (view: FieldpulseView) => void;
+  setView: (view: JobsiteView) => void;
   loadDemo: () => void;
   startNewProject: (identity?: Partial<ProjectIdentity>) => void;
   updateProject: (identity: ProjectIdentity) => void;
@@ -242,7 +242,28 @@ function migrateJobsite(raw: unknown): Jobsite {
   };
 }
 
-export const useFieldpulseStore = create<FieldpulseState>()(
+
+/** One-time copy of retired Fieldpulse localStorage keys into lpin-jobsite-v1. */
+function migrateLegacyJobsiteStorage() {
+  if (typeof window === "undefined" || !window.localStorage) return;
+  const next = "lpin-jobsite-v1";
+  if (window.localStorage.getItem(next)) return;
+  for (const old of ["aos-fieldpulse-v6", "aos-fieldpulse-v3", "aos-fieldpulse-v2"]) {
+    const raw = window.localStorage.getItem(old);
+    if (raw) {
+      try {
+        window.localStorage.setItem(next, raw);
+        window.localStorage.removeItem(old);
+      } catch {
+        // ignore quota / private mode
+      }
+      return;
+    }
+  }
+}
+migrateLegacyJobsiteStorage();
+
+export const useJobsiteStore = create<JobsiteState>()(
   persist(
     (set, get) => ({
       jobsite: createDemoJobsite(),
@@ -985,15 +1006,15 @@ export const useFieldpulseStore = create<FieldpulseState>()(
       gap: () => computeVisibilityGap(get().jobsite.reports),
     }),
     {
-      name: "aos-fieldpulse-v6",
+      name: "lpin-jobsite-v1",
       version: 6,
       migrate: (persisted) => {
         const p = (persisted ?? {}) as {
           jobsite?: unknown;
           role?: Role;
-          view?: FieldpulseView;
+          view?: JobsiteView;
         };
-        const views: FieldpulseView[] = [
+        const views: JobsiteView[] = [
           "feed",
           "report",
           "messages",

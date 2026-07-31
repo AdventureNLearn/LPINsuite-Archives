@@ -150,7 +150,7 @@ Designed for **The United States of America** first. Other country packs can com
 }
 ```
 
-Legacy `.fieldpulse.json` / `fieldpulse-pack` files still import.
+Legacy Fieldpulse pack files (`.fieldpulse.json` / `fieldpulse-pack`) still import; new exports use `lpin-jobsite-pack`.
 
 ---
 

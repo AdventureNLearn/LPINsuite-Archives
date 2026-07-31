@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FieldpulseApp } from "@/components/fieldpulse/FieldpulseApp";
+import { JobsiteApp } from "@/components/jobsite/JobsiteApp";
 
 export const Route = createFileRoute("/jobsite")({
   component: JobsitePage,
@@ -18,5 +18,5 @@ export const Route = createFileRoute("/jobsite")({
 });
 
 function JobsitePage() {
-  return <FieldpulseApp />;
+  return <JobsiteApp />;
 }

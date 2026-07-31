@@ -106,7 +106,7 @@ export const CLAIMCARD_KERNEL_LINES = [
   "Prefer primary records over second-hand recaps.",
 ] as const;
 
-export const FIELDPULSE_KERNEL_LINES = [
+export const JOBSITE_KERNEL_LINES = [
   "Stop-now (P0) stays visible until a person closes it — mark-seen is not fixed.",
   "Failed inspections and open P0 block “all clear.”",
   "Wired lanes keep report → message → inspection linked on your board.",

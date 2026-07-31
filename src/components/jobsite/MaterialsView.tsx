@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import {
   materialLineCost,
   materialsTotals,
-} from "@/lib/fieldpulse/apply-template";
-import { divisionLabel, TRADE_DIVISIONS } from "@/lib/fieldpulse/divisions";
-import { useFieldpulseStore } from "@/lib/fieldpulse/store";
+} from "@/lib/jobsite/apply-template";
+import { divisionLabel, TRADE_DIVISIONS } from "@/lib/jobsite/divisions";
+import { useJobsiteStore } from "@/lib/jobsite/store";
 import type {
   MaterialStatus,
   TradeDivision,
-} from "@/lib/fieldpulse/types";
+} from "@/lib/jobsite/types";
 import { cn } from "@/lib/utils";
 
 function money(n: number): string {
@@ -41,11 +41,11 @@ function statusLabel(s: MaterialStatus): string {
 }
 
 export function MaterialsView() {
-  const jobsite = useFieldpulseStore((s) => s.jobsite);
-  const addMaterial = useFieldpulseStore((s) => s.addMaterial);
-  const updateMaterial = useFieldpulseStore((s) => s.updateMaterial);
-  const removeMaterial = useFieldpulseStore((s) => s.removeMaterial);
-  const setView = useFieldpulseStore((s) => s.setView);
+  const jobsite = useJobsiteStore((s) => s.jobsite);
+  const addMaterial = useJobsiteStore((s) => s.addMaterial);
+  const updateMaterial = useJobsiteStore((s) => s.updateMaterial);
+  const removeMaterial = useJobsiteStore((s) => s.removeMaterial);
+  const setView = useJobsiteStore((s) => s.setView);
 
   const lines = jobsite.materials ?? [];
   const totals = useMemo(() => materialsTotals(lines), [lines]);
