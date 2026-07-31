@@ -110,22 +110,6 @@ export const US_JURISDICTION_TEMPLATES: UsJurisdictionTemplate[] = [
     ],
   },
   {
-    id: "us-miami-fl",
-    label: "Miami-Dade, FL",
-    stateCode: "FL",
-    cityState: "Miami, FL",
-    locationHint: "Miami-Dade County, Florida",
-    permittingOffice: "Miami-Dade County Building Department",
-    permitNumberHint: "B-YYYY-#####",
-    commonInspections: [
-      "Foundation",
-      "Structural framing",
-      "Roof dry-in",
-      "Rough electrical / plumbing / mechanical",
-      "Final",
-    ],
-  },
-  {
     id: "us-denver-co",
     label: "Denver, CO",
     stateCode: "CO",

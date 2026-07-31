@@ -265,16 +265,16 @@ async function suiteStateAhj(browser) {
     // City freeform must not override state (state-only rule)
     await stateSelect.selectOption("TX");
     await page.waitForTimeout(200);
-    const city = page.locator('input[placeholder*="Miami-Dade"]');
+    const city = page.locator('input[placeholder*="County or city"]');
     if (await city.count()) {
-      await city.fill("Miami");
+      await city.fill("Anytown");
       await page.waitForTimeout(300);
     }
     const afterCity = await bodyText(page);
     if (/Texas/i.test(afterCity) && !/Florida \(FBC/i.test(afterCity)) {
       pass("city freeform does not override state");
     } else {
-      fail("city freeform does not override state", "expected Texas pack with Miami typed", {
+      fail("city freeform does not override state", "expected Texas pack with freeform city typed", {
         hasTexas: /Texas/i.test(afterCity),
         hasFlFbc: /Florida \(FBC/i.test(afterCity),
       });
