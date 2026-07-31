@@ -7,6 +7,7 @@ import {
   Mail,
   MapPin,
   Printer,
+  RefreshCw,
   RotateCcw,
   Save,
   Sparkles,
@@ -42,11 +43,14 @@ import {
   CODE_DISCLAIMER,
   resolveAhjCodePack,
 } from "@/lib/fieldpulse/codes";
+import { cycleStalenessMessage } from "@/lib/fieldpulse/code-cycles";
 import {
-  cycleStalenessMessage,
-  hasDedicatedCycleProfile,
-  resolveStateCodeCycle,
-} from "@/lib/fieldpulse/code-cycles";
+  checkGuidanceUpdates,
+  getGuidanceCacheMeta,
+  GUIDANCE_REFRESH_DISCLAIMER,
+  hasDedicatedCycleProfileWithCache,
+  resolveStateCodeCycleWithCache,
+} from "@/lib/fieldpulse/jurisdiction-packs";
 import { todayYmd } from "@/lib/fieldpulse/gantt";
 import { cn } from "@/lib/utils";
 
@@ -115,6 +119,8 @@ export function ProjectView() {
   const [materialsBudget, setMaterialsBudget] = useState(
     jobsite.materialsBudget != null ? String(jobsite.materialsBudget) : "",
   );
+  const [guidanceBusy, setGuidanceBusy] = useState(false);
+  const [guidanceMetaTick, setGuidanceMetaTick] = useState(0);
 
   useEffect(() => {
     setForm(syncFormFromJobsite(jobsite));
@@ -574,10 +580,13 @@ export function ProjectView() {
           permittingOffice: form.permittingOffice || jobsite.permittingOffice,
         });
         const stCode = form.stateCode || jobsite.stateCode;
-        const cycle = resolveStateCodeCycle(stCode);
+        // guidanceMetaTick forces re-read after cache refresh
+        void guidanceMetaTick;
+        const cycle = resolveStateCodeCycleWithCache(stCode);
         const cycleNote = cycleStalenessMessage(cycle, {
-          dedicated: hasDedicatedCycleProfile(stCode),
+          dedicated: hasDedicatedCycleProfileWithCache(stCode),
         });
+        const cacheMeta = getGuidanceCacheMeta();
         return (
           <section className="card-lpin space-y-3 rounded-2xl p-4 sm:p-6">
             <h2 className="text-sm font-medium text-fg">
@@ -592,6 +601,45 @@ export function ProjectView() {
                 {cycleNote}
               </p>
             ) : null}
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={guidanceBusy}
+                onClick={() => {
+                  setGuidanceBusy(true);
+                  void checkGuidanceUpdates(
+                    stCode ? { stateCode: stCode } : undefined,
+                  )
+                    .then((result) => {
+                      if (!result.ok) {
+                        toast.error(result.error);
+                        return;
+                      }
+                      setGuidanceMetaTick((n) => n + 1);
+                      toast.success(result.message);
+                    })
+                    .finally(() => setGuidanceBusy(false));
+                }}
+              >
+                <RefreshCw className={guidanceBusy ? "animate-spin" : undefined} />
+                {guidanceBusy ? "Checking…" : "Check guidance updates"}
+              </Button>
+              {cacheMeta.packCount > 0 ? (
+                <span className="text-[10px] text-fg-subtle">
+                  {cacheMeta.packCount} pack{cacheMeta.packCount === 1 ? "" : "s"} on
+                  this device
+                  {cacheMeta.fetchedAt
+                    ? ` · last check ${cacheMeta.fetchedAt.slice(0, 10)}`
+                    : ""}
+                </span>
+              ) : (
+                <span className="text-[10px] text-fg-subtle">
+                  Optional — stays offline until you check
+                </span>
+              )}
+            </div>
             <ul className="space-y-1 text-xs text-fg-muted">
               {pack.modelCodes.map((c) => (
                 <li key={c}>· {c}</li>
@@ -620,6 +668,9 @@ export function ProjectView() {
             </ul>
             <p className="text-[10px] text-fg-subtle text-pretty">
               {CODE_DISCLAIMER}
+            </p>
+            <p className="text-[10px] text-fg-subtle text-pretty">
+              {GUIDANCE_REFRESH_DISCLAIMER}
             </p>
           </section>
         );
