@@ -206,3 +206,14 @@ MIT — see [LICENSE](./LICENSE).
 ## Owner
 
 [AdventureNLearn](https://github.com/AdventureNLearn)
+
+## Quality / E2E
+
+With the app running (`npm run dev` on port 8080):
+
+```bash
+npm run qa
+```
+
+Runs the full Playwright suite (`scripts/qa-lpin-suite.mjs`): smoke, blank jobsite, state→AHJ, field report + inspection, guidance packs, claims sample, and mobile overflow. Screenshots and a JSON summary land in `screenshots/`.
+
