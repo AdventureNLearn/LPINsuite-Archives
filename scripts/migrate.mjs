@@ -78,5 +78,24 @@ main().catch((err) => {
   for (const key of ["code", "detail", "hint", "position", "where"]) {
     if (err?.[key] != null) console.error(`[migrate]   ${key}: ${err[key]}`);
   }
+  // Soft-skip unreachable / misconfigured DB during static publishes (e.g. grok.me)
+  // unless MIGRATE_STRICT=1. SQL errors still fail when the server is reachable.
+  const code = err?.code;
+  const softCodes = new Set([
+    "ECONNREFUSED",
+    "ENOTFOUND",
+    "ETIMEDOUT",
+    "ECONNRESET",
+    "EAI_AGAIN",
+    "57P03", // cannot_connect_now
+    "28000", // invalid_authorization_specification
+    "28P01", // invalid_password
+  ]);
+  if (process.env.MIGRATE_STRICT !== "1" && softCodes.has(code)) {
+    console.warn(
+      "[migrate] soft-skip — database unreachable; continuing build (set MIGRATE_STRICT=1 to fail).",
+    );
+    process.exit(0);
+  }
   process.exit(1);
 });
