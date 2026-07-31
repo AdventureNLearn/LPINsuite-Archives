@@ -44,6 +44,7 @@ import {
 } from "@/lib/fieldpulse/codes";
 import {
   cycleStalenessMessage,
+  hasDedicatedCycleProfile,
   resolveStateCodeCycle,
 } from "@/lib/fieldpulse/code-cycles";
 import { todayYmd } from "@/lib/fieldpulse/gantt";
@@ -347,8 +348,42 @@ export function ProjectView() {
             value={form.stateCode}
             onChange={(e) => {
               const code = e.target.value;
-              setField("stateCode", code);
+              const prev = form.stateCode;
               setTemplateId("us-custom");
+              // Changing state clears city-starter-derived fields so AHJ text does not go stale.
+              setForm((f) => {
+                const same = prev === code;
+                const fromTemplate =
+                  !same &&
+                  Boolean(
+                    US_JURISDICTION_TEMPLATES.find(
+                      (t) =>
+                        t.id !== "us-custom" &&
+                        t.stateCode === prev &&
+                        (t.cityState === f.cityState ||
+                          t.permittingOffice === f.permittingOffice),
+                    ),
+                  );
+                return {
+                  ...f,
+                  stateCode: code,
+                  ...(fromTemplate
+                    ? {
+                        cityState: "",
+                        location:
+                          f.location ===
+                          US_JURISDICTION_TEMPLATES.find(
+                            (t) =>
+                              t.stateCode === prev &&
+                              t.locationHint === f.location,
+                          )?.locationHint
+                            ? ""
+                            : f.location,
+                        permittingOffice: "City / County Building Department",
+                      }
+                    : {}),
+                };
+              });
             }}
           >
             <option value="">— select state —</option>
@@ -417,28 +452,16 @@ export function ProjectView() {
             />
           </label>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-fg-muted">
-              Building permit number
-            </span>
-            <input
-              className="field-input"
-              value={form.permitNumber}
-              onChange={(e) => setField("permitNumber", e.target.value)}
-            />
-          </label>
-          <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-fg-muted">State code</span>
-            <input
-              className="field-input"
-              value={form.stateCode}
-              maxLength={2}
-              onChange={(e) => setField("stateCode", e.target.value.toUpperCase())}
-              placeholder="TX"
-            />
-          </label>
-        </div>
+        <label className="block space-y-1.5">
+          <span className="text-sm font-medium text-fg-muted">
+            Building permit number
+          </span>
+          <input
+            className="field-input"
+            value={form.permitNumber}
+            onChange={(e) => setField("permitNumber", e.target.value)}
+          />
+        </label>
         <label className="block space-y-1.5">
           <span className="text-sm font-medium text-fg-muted">
             Building / development department (team copy)
@@ -550,8 +573,11 @@ export function ProjectView() {
           cityState: form.cityState || jobsite.cityState,
           permittingOffice: form.permittingOffice || jobsite.permittingOffice,
         });
-        const cycle = resolveStateCodeCycle(form.stateCode || jobsite.stateCode);
-        const cycleNote = cycleStalenessMessage(cycle);
+        const stCode = form.stateCode || jobsite.stateCode;
+        const cycle = resolveStateCodeCycle(stCode);
+        const cycleNote = cycleStalenessMessage(cycle, {
+          dedicated: hasDedicatedCycleProfile(stCode),
+        });
         return (
           <section className="card-lpin space-y-3 rounded-2xl p-4 sm:p-6">
             <h2 className="text-sm font-medium text-fg">

@@ -43,14 +43,14 @@ export const STATE_CODE_CYCLES: Record<string, StateCodeCycleMeta> = {
     typicalCycleYears: 3,
     modelBase: "California Building Standards Code (Title 24) — 2025 edition",
     lastKnownEffective: "2026-01-01",
-    nextExpectedWindow: "Intervening supplements ~2027; next full triennial later",
-    packVersion: "1.0.0",
+    nextExpectedWindow: "Residential code changes largely paused through ~June 2031 (except emergencies / wildfire mitigation); intervening supplements possible",
+    packVersion: "1.0.1",
     notes: [
       "California uses statewide Title 24 with local administration and amendments.",
-      "Triennial cycles are the historical pattern; intervening supplements also occur.",
+      "Triennial cycles are the historical pattern; recent legislation paused most residential code changes through approximately June 2031.",
       "Always verify current Title 24 parts and local amendments with the AHJ.",
     ],
-    sourceHint: "California Building Standards Commission",
+    sourceHint: "California Building Standards Commission / recent residential freeze legislation",
   },
   TX: {
     stateCode: "TX",
@@ -182,14 +182,31 @@ export function resolveStateCodeCycle(stateCode?: string): StateCodeCycleMeta | 
   };
 }
 
-/** Soft staleness signal for UI — guidance only. */
-export function cycleStalenessMessage(meta: StateCodeCycleMeta | null): string | null {
+/**
+ * Soft staleness signal for UI — guidance only.
+ * Quieter policy: only surface a banner when we have a dedicated cycle profile
+ * (or an explicit nextExpectedWindow worth calling out). Generic fallbacks stay silent.
+ */
+export function cycleStalenessMessage(
+  meta: StateCodeCycleMeta | null,
+  opts?: { dedicated?: boolean },
+): string | null {
   if (!meta) return null;
+  const dedicated = opts?.dedicated ?? false;
+  // Dedicated home-rule / variable profiles still get a short honest note.
   if (meta.typicalCycleYears === null) {
-    return "Local or variable adoption — confirm the current edition with the AHJ.";
+    return dedicated
+      ? "Local or variable adoption — confirm the current edition with the AHJ."
+      : null;
   }
-  if (meta.nextExpectedWindow) {
+  if (dedicated && meta.nextExpectedWindow) {
     return `Guidance cycle note: ${meta.nextExpectedWindow}. Verify with the local building department.`;
   }
   return null;
+}
+
+/** True when a state has a curated cycle row (not the generic fallback). */
+export function hasDedicatedCycleProfile(stateCode?: string): boolean {
+  const st = (stateCode || "").toUpperCase();
+  return Boolean(st && STATE_CODE_CYCLES[st]);
 }
