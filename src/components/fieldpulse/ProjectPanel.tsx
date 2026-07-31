@@ -21,7 +21,6 @@ import {
   buildReadinessPacket,
 } from "@/lib/fieldpulse/domain";
 import {
-  US_JURISDICTION_TEMPLATES,
   US_PRODUCT_NOTICE,
   US_STATES,
 } from "@/lib/fieldpulse/jurisdictions";
@@ -106,7 +105,6 @@ export function ProjectView() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState(() => syncFormFromJobsite(jobsite));
-  const [templateId, setTemplateId] = useState("us-custom");
   const [pendingAction, setPendingAction] = useState<
     null | "blank" | "demo"
   >(null);
@@ -128,12 +126,6 @@ export function ProjectView() {
     setProjectStartDate(jobsite.projectStartDate ?? todayYmd());
     setMaterialsBudget(
       jobsite.materialsBudget != null ? String(jobsite.materialsBudget) : "",
-    );
-    setTemplateId(
-      jobsite.stateCode
-        ? US_JURISDICTION_TEMPLATES.find((t) => t.stateCode === jobsite.stateCode)
-            ?.id ?? "us-custom"
-        : "us-custom",
     );
   }, [jobsite.id, jobsite.isDemo, jobsite.updatedAt]);
 
@@ -161,22 +153,24 @@ export function ProjectView() {
     };
   }
 
-  function applyTemplate(id: string) {
-    setTemplateId(id);
-    const t = US_JURISDICTION_TEMPLATES.find((x) => x.id === id);
-    if (!t || id === "us-custom") return;
+  function defaultOfficeForState(code: string): string {
+    if (!code) return "City / County Building Department";
+    if (code === "FL") {
+      return "Local building department (Florida Building Code)";
+    }
+    const s = US_STATES.find((x) => x.code === code);
+    return s
+      ? `${s.name} local building department`
+      : "City / County Building Department";
+  }
+
+  function onStateChange(code: string) {
     setForm((f) => ({
       ...f,
-      cityState: t.cityState,
-      location: t.locationHint,
-      permittingOffice: t.permittingOffice,
-      stateCode: t.stateCode,
-      permitNumber:
-        !f.permitNumber ||
-        f.permitNumber.includes("demo") ||
-        f.permitNumber === "TBD"
-          ? t.permitNumberHint
-          : f.permitNumber,
+      stateCode: code,
+      // Freeform city/county — clear on state change so labels do not cross states.
+      cityState: "",
+      permittingOffice: defaultOfficeForState(code),
     }));
   }
 
@@ -346,51 +340,13 @@ export function ProjectView() {
           <h2 className="text-sm font-medium text-fg">Site identity</h2>
         </div>
 
-        {/* Primary: State from full US_STATES */}
+        {/* Primary: State drives codes, timelines, and AHJ guidance */}
         <label className="block space-y-1.5">
           <span className="text-sm font-medium text-fg-muted">State</span>
           <select
             className="field-input"
             value={form.stateCode}
-            onChange={(e) => {
-              const code = e.target.value;
-              const prev = form.stateCode;
-              setTemplateId("us-custom");
-              // Changing state clears city-starter-derived fields so AHJ text does not go stale.
-              setForm((f) => {
-                const same = prev === code;
-                const fromTemplate =
-                  !same &&
-                  Boolean(
-                    US_JURISDICTION_TEMPLATES.find(
-                      (t) =>
-                        t.id !== "us-custom" &&
-                        t.stateCode === prev &&
-                        (t.cityState === f.cityState ||
-                          t.permittingOffice === f.permittingOffice),
-                    ),
-                  );
-                return {
-                  ...f,
-                  stateCode: code,
-                  ...(fromTemplate
-                    ? {
-                        cityState: "",
-                        location:
-                          f.location ===
-                          US_JURISDICTION_TEMPLATES.find(
-                            (t) =>
-                              t.stateCode === prev &&
-                              t.locationHint === f.location,
-                          )?.locationHint
-                            ? ""
-                            : f.location,
-                        permittingOffice: "City / County Building Department",
-                      }
-                    : {}),
-                };
-              });
-            }}
+            onChange={(e) => onStateChange(e.target.value)}
           >
             <option value="">— select state —</option>
             {US_STATES.map((s) => (
@@ -403,28 +359,11 @@ export function ProjectView() {
             <span className="block text-[11px] text-fg-subtle">
               {US_STATES.find((s) => s.code === form.stateCode)!.note}
             </span>
-          ) : null}
-        </label>
-
-        {/* Secondary: optional city / county starter */}
-        <label className="block space-y-1.5">
-          <span className="text-sm font-medium text-fg-muted">
-            City / county starter (optional)
-          </span>
-          <select
-            className="field-input"
-            value={templateId}
-            onChange={(e) => applyTemplate(e.target.value)}
-          >
-            {US_JURISDICTION_TEMPLATES.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.label}
-              </option>
-            ))}
-          </select>
-          <span className="block text-[11px] text-fg-subtle">
-            Fills building-department name only — not a live city portal. County / muni details stay freeform or user-side.
-          </span>
+          ) : (
+            <span className="block text-[11px] text-fg-subtle">
+              State selection loads model codes, hold points, and adoption-cycle guidance.
+            </span>
+          )}
         </label>
 
         <label className="block space-y-1.5">
@@ -449,12 +388,14 @@ export function ProjectView() {
             />
           </label>
           <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-fg-muted">City, ST</span>
+            <span className="text-sm font-medium text-fg-muted">
+              City / county (type in)
+            </span>
             <input
               className="field-input"
               value={form.cityState}
               onChange={(e) => setField("cityState", e.target.value)}
-              placeholder="Austin, TX"
+              placeholder="e.g. Miami-Dade, Vero Beach, Tampa"
             />
           </label>
         </div>
@@ -590,7 +531,7 @@ export function ProjectView() {
         return (
           <section className="card-lpin space-y-3 rounded-2xl p-4 sm:p-6">
             <h2 className="text-sm font-medium text-fg">
-              AHJ & code pack (by location)
+              AHJ & code pack (by state)
             </h2>
             <p className="text-xs text-gold font-medium">{pack.label}</p>
             <p className="text-xs text-fg-muted text-pretty">
@@ -645,7 +586,7 @@ export function ProjectView() {
               ))}
             </ul>
             <div className="space-y-2">
-              {pack.requirements.slice(0, 5).map((r) => (
+              {pack.requirements.slice(0, 8).map((r) => (
                 <div
                   key={r.id}
                   className="rounded-xl border border-border bg-surface-1 px-3 py-2"
