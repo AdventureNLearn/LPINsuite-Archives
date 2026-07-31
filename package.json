@@ -16,7 +16,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "build:app": "vite build",
-    "build:with-db": "vite build && node scripts/migrate.mjs"
+    "build:with-db": "vite build && node scripts/migrate.mjs",
+    "qa": "node scripts/qa-lpin-suite.mjs",
+    "qa:legacy": "node scripts/qa-apps.mjs",
+    "test:e2e": "node scripts/qa-lpin-suite.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.3",
