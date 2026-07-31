@@ -1,6 +1,9 @@
 /**
  * Free public building-department / code resource links.
  * Information only — not logins, not official forms, not endorsements.
+ *
+ * OPSEC / geographic agnosticism: no municipality-named portals.
+ * State selection does not surface city-specific links.
  */
 
 export interface FreeResourceLink {
@@ -42,70 +45,44 @@ export const NATIONAL_FREE_RESOURCES: FreeResourceLink[] = [
     url: "https://www.epa.gov/npdes/stormwater-discharges-construction-activities",
     note: "Federal construction stormwater overview — check your state CGP.",
   },
+  {
+    id: "fl-building-commission",
+    label: "Florida Building Commission (public site)",
+    url: "https://www.floridabuilding.org/",
+    note: "State public site for the FBC process — not a local AHJ login.",
+  },
 ];
 
-/** Public city/county info pages (not authenticated portals). */
-export const JURISDICTION_PUBLIC_LINKS: Record<string, FreeResourceLink[]> = {
-  TX: [
-    {
-      id: "austin-dsd",
-      label: "Austin Development Services (public site)",
-      url: "https://www.austintexas.gov/department/development-services",
-      note: "City public site — not a login from this app.",
-    },
-  ],
-  FL: [
-    {
-      id: "fl-building-commission",
-      label: "Florida Building Commission (public site)",
-      url: "https://www.floridabuilding.org/",
-      note: "State public site for the FBC process — not a local AHJ login.",
-    },
-  ],
-  CO: [
-    {
-      id: "denver-cpd",
-      label: "Denver CPD (public site)",
-      url: "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Community-Planning-and-Development",
-      note: "City public site for permits and inspections info.",
-    },
-  ],
-  AZ: [
-    {
-      id: "phoenix-pdd",
-      label: "Phoenix Planning & Development (public site)",
-      url: "https://www.phoenix.gov/pdd",
-      note: "City public site.",
-    },
-  ],
-  WA: [
-    {
-      id: "seattle-sdci",
-      label: "Seattle SDCI (public site)",
-      url: "https://www.seattle.gov/sdci",
-      note: "City public site for construction permits.",
-    },
-  ],
-  NY: [
-    {
-      id: "nyc-dob",
-      label: "NYC Department of Buildings (public site)",
-      url: "https://www.nyc.gov/site/buildings/index.page",
-      note: "City public site — DOB filings are separate systems.",
-    },
-  ],
-  IL: [
-    {
-      id: "chicago-dob",
-      label: "Chicago Department of Buildings (public site)",
-      url: "https://www.chicago.gov/city/en/depts/bldgs.html",
-      note: "City public site.",
-    },
-  ],
-};
+/**
+ * Per-state optional links. Kept empty for geographic agnosticism —
+ * no city/county portals ship in-app. Callers still get national resources.
+ */
+export const JURISDICTION_PUBLIC_LINKS: Record<string, FreeResourceLink[]> = {};
 
+/** Resolve free links for a state — national only unless a state row is curated later. */
 export function freeLinksForState(stateCode?: string): FreeResourceLink[] {
   const st = (stateCode || "").toUpperCase();
   const local = st ? JURISDICTION_PUBLIC_LINKS[st] ?? [] : [];
-  return [...local, ...NATIONAL_FREE_RESOURCES];
+  // Florida-only national-adjacent: include FBC commission when FL selected
+  const extra =
+    st === "FL"
+      ? NATIONAL_FREE_RESOURCES.filter((r) => r.id === "fl-building-commission")
+      : [];
+  const national = NATIONAL_FREE_RESOURCES.filter(
+    (r) => r.id !== "fl-building-commission" || st === "FL",
+  );
+  // Avoid dupes
+  const seen = new Set<string>();
+  const out: FreeResourceLink[] = [];
+  for (const link of [...local, ...extra, ...national]) {
+    if (seen.has(link.id)) continue;
+    // Only show FL commission when FL selected
+    if (link.id === "fl-building-commission" && st !== "FL") continue;
+    seen.add(link.id);
+    out.push(link);
+  }
+  return out;
 }
+
+/** @deprecated alias */
+export const resolveFreePortalLinks = freeLinksForState;

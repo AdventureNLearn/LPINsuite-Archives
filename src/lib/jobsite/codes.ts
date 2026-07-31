@@ -147,37 +147,6 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
     ],
   }),
   pack({
-    id: "us-austin-tx",
-    label: "Austin, TX",
-    stateCode: "TX",
-    ahjName: "City of Austin Development Services",
-    modelCodes: [
-      "Austin-adopted IBC / IRC editions",
-      "NEC",
-      "Local amendments + environmental criteria",
-    ],
-    notes: [
-      "Development Services handles building permits and many inspections.",
-      "Site / stormwater reviews often run parallel to building.",
-      "Always confirm current fee schedules and inspection booking rules with the city.",
-    ],
-    commonPermits: [
-      "Building",
-      "Electrical",
-      "Plumbing",
-      "Mechanical",
-      "Site / stormwater",
-    ],
-    extraReqs: [
-      {
-        id: "austin-swq",
-        title: "Stormwater quality (SWQ)",
-        summary: "Inlets and BMPs must be maintained — failed SWQ walks delay related inspections.",
-        holdPoints: ["Erosion control", "SWQ inlet walk", "Final site"],
-      },
-    ],
-  }),
-  pack({
     id: "us-fl",
     label: "Florida (FBC statewide baseline)",
     stateCode: "FL",
@@ -415,17 +384,8 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
     modelCodes: ["IBC / IRC as adopted", "NEC", "IMC / IPC", "IECC energy"],
     notes: [
       "Snow load and energy code paths vary by elevation and jurisdiction.",
-      "Denver and other cities publish local amendments.",
+      "Local amendments vary by municipality — confirm with the local AHJ.",
     ],
-    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
-  }),
-  pack({
-    id: "us-denver-co",
-    label: "Denver, CO",
-    stateCode: "CO",
-    ahjName: "City and County of Denver CPD",
-    modelCodes: ["Denver-adopted IBC / IRC", "NEC", "Local amendments"],
-    notes: ["Confirm inspection scheduling through Denver CPD processes."],
     commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
   }),
   pack({
@@ -435,15 +395,6 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
     ahjName: "Local municipal AHJ",
     modelCodes: ["IBC / IRC as adopted", "NEC", "IMC / IPC"],
     notes: ["Heat, dust, and monsoon season affect site and envelope sequencing."],
-    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
-  }),
-  pack({
-    id: "us-phoenix-az",
-    label: "Phoenix, AZ",
-    stateCode: "AZ",
-    ahjName: "City of Phoenix Planning & Development",
-    modelCodes: ["Phoenix-adopted codes", "NEC"],
-    notes: ["Verify current Phoenix amendments and inspection booking."],
     commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
   }),
   pack({
@@ -460,46 +411,13 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
     commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
   }),
   pack({
-    id: "us-seattle-wa",
-    label: "Seattle, WA",
-    stateCode: "WA",
-    ahjName: "Seattle SDCI",
-    modelCodes: ["Seattle Building Code", "Seattle Energy Code", "NEC"],
-    notes: ["SDCI handles construction permits and inspections for Seattle."],
-    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire", "Side sewer"],
-  }),
-  pack({
     id: "us-ny",
-    label: "New York State (outside NYC)",
+    label: "New York (state baseline)",
     stateCode: "NY",
     ahjName: "Local code enforcement",
     modelCodes: ["Uniform Code (NYS)", "Energy Code", "NEC as adopted"],
-    notes: ["NYC is separate — use the NYC pack for the five boroughs."],
+    notes: ["Some large municipalities maintain separate construction codes — confirm the path with the local AHJ."],
     commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
-  }),
-  pack({
-    id: "us-nyc-ny",
-    label: "New York City, NY",
-    stateCode: "NY",
-    ahjName: "NYC Department of Buildings",
-    modelCodes: [
-      "NYC Construction Codes",
-      "NYC Electrical Code",
-      "FDNY rules as applicable",
-    ],
-    notes: [
-      "NYC DOB processes differ substantially from upstate NY.",
-      "Special inspections and DOB filings are common on larger work.",
-    ],
-    commonPermits: ["NB / Alteration", "Electrical", "Plumbing", "Mechanical", "Fire"],
-    extraReqs: [
-      {
-        id: "nyc-special",
-        title: "Special inspections",
-        summary: "Many projects require registered special inspectors for structural and other scopes.",
-        holdPoints: ["Special inspection reports", "TR forms as required", "Final sign-off path"],
-      },
-    ],
   }),
   pack({
     id: "us-il",
@@ -507,16 +425,7 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
     stateCode: "IL",
     ahjName: "Local municipal AHJ",
     modelCodes: ["IBC / IRC as adopted", "NEC", "Illinois Plumbing Code (where applicable)"],
-    notes: ["Chicago has its own code path — use Chicago pack in the city."],
-    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
-  }),
-  pack({
-    id: "us-chicago-il",
-    label: "Chicago, IL",
-    stateCode: "IL",
-    ahjName: "City of Chicago Department of Buildings",
-    modelCodes: ["Chicago Building Code", "Chicago Electrical Code", "Local fire rules"],
-    notes: ["Chicago code is distinct from suburban Illinois adoptions."],
+    notes: ["Some large municipalities maintain distinct code paths — confirm with the local AHJ."],
     commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
   }),
 ];
@@ -546,25 +455,8 @@ export function resolveAhjCodePack(input: {
     return synthesizeStatePack(st);
   }
 
-  // No state selected: optional city name hints only (never used when state is set).
-  const city = (input.cityState || "").toLowerCase();
-  const office = (input.permittingOffice || "").toLowerCase();
-  const cityHits: [string, string][] = [
-    ["austin", "us-austin-tx"],
-    ["denver", "us-denver-co"],
-    ["phoenix", "us-phoenix-az"],
-    ["seattle", "us-seattle-wa"],
-    ["new york", "us-nyc-ny"],
-    ["nyc", "us-nyc-ny"],
-    ["chicago", "us-chicago-il"],
-  ];
-  for (const [needle, id] of cityHits) {
-    if (city.includes(needle) || office.includes(needle)) {
-      const found = AHJ_CODE_PACKS.find((p) => p.id === id);
-      if (found) return found;
-    }
-  }
-
+  // No city-name routing — geographic agnosticism / OPSEC.
+  // Without a state, return the generic US baseline only.
   return AHJ_CODE_PACKS.find((p) => p.id === "us-generic")!;
 }
 

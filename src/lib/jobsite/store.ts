@@ -223,7 +223,7 @@ function migrateJobsite(raw: unknown): Jobsite {
     permittingOffice: j.permittingOffice || "City / County Building Department",
     country: "US",
     stateCode: j.stateCode,
-    isDemo: j.isDemo ?? j.id === "js_riverside_demo",
+    isDemo: j.isDemo ?? j.id === "js_sample_demo",
     captainName: j.captainName,
     notes: j.notes,
     updatedAt: j.updatedAt || new Date().toISOString(),

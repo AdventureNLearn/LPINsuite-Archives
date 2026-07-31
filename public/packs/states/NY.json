@@ -7,12 +7,12 @@
   "cycle": {
     "stateCode": "NY",
     "typicalCycleYears": 3,
-    "modelBase": "NYS Uniform Code (outside NYC)",
-    "nextExpectedWindow": "State update cycle; NYC has a separate path",
+    "modelBase": "NYS Uniform Code (statewide framework)",
+    "nextExpectedWindow": "State update cycle; some large municipalities differ",
     "packVersion": "1.0.0",
     "notes": [
-      "Outside NYC, the Uniform Code is statewide with local enforcement.",
-      "New York City uses its own Construction Codes \u2014 use the NYC path there."
+      "The Uniform Code is the statewide framework with local enforcement.",
+      "Some large municipalities maintain separate construction codes \u2014 confirm with the local AHJ."
     ],
     "sourceHint": "NYS Department of State / local code enforcement"
   },
