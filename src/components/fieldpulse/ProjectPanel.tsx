@@ -184,14 +184,47 @@ export function ProjectView() {
   }
 
   function executeBlank() {
-    startNewProject({
+    const blankIdentity = {
       name: "My jobsite",
       location: "United States",
       permitNumber: "TBD",
       permittingOffice: "City / County Building Department",
+      cityState: "",
+      stateCode: "",
+      captainName: "",
+      notes: "",
+    } as const;
+    startNewProject({
+      name: blankIdentity.name,
+      location: blankIdentity.location,
+      permitNumber: blankIdentity.permitNumber,
+      permittingOffice: blankIdentity.permittingOffice,
+      // Explicitly clear jurisdiction so AHJ panel resets for all 51
+      stateCode: undefined,
+      cityState: undefined,
+      captainName: undefined,
+      notes: undefined,
+      industry: undefined,
+      projectStartDate: undefined,
+      materialsBudget: undefined,
     });
+    // Immediate local form reset (do not wait on effect) so State/AHJ update now
+    setForm({
+      name: blankIdentity.name,
+      location: blankIdentity.location,
+      cityState: "",
+      permitNumber: blankIdentity.permitNumber,
+      permittingOffice: blankIdentity.permittingOffice,
+      stateCode: "",
+      captainName: "",
+      notes: "",
+    });
+    setIndustry("");
+    setProjectStartDate(todayYmd());
+    setMaterialsBudget("");
+    setGuidanceMetaTick((n) => n + 1);
     setPendingAction(null);
-    toast.success("Blank jobsite ready — enter your site details and save.");
+    toast.success("Blank jobsite ready — pick a state and enter your site details.");
   }
 
   function executeDemo() {
