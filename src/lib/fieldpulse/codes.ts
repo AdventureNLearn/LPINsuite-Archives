@@ -72,6 +72,29 @@ function pack(
   };
 }
 
+/** Synthesize a usable baseline pack for any state that lacks a dedicated entry. */
+function synthesizeStatePack(stateCode: string): AhjCodePack {
+  const st = stateCode.toUpperCase();
+  return pack({
+    id: `us-${st.toLowerCase()}-synth`,
+    label: `${st} (baseline guidance)`,
+    stateCode: st,
+    ahjName: "Local city / county building department",
+    modelCodes: [
+      "IBC / IRC as adopted by the state or locality",
+      "NEC (electrical)",
+      "IPC / IMC / IFC as adopted",
+    ],
+    notes: [
+      `No dedicated detailed pack is shipped for ${st} yet — this is a conservative baseline.`,
+      "Confirm the adopted edition year and any state or local amendments with the AHJ.",
+      "Local amendments always override model code text.",
+      "This board is a team copy — not a portal login.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  });
+}
+
 export const AHJ_CODE_PACKS: AhjCodePack[] = [
   pack({
     id: "us-generic",
@@ -204,6 +227,166 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
         holdPoints: ["Roof", "Openings", "Shutters / protection"],
       },
     ],
+  }),
+  pack({
+    id: "us-ca",
+    label: "California (state baseline)",
+    stateCode: "CA",
+    ahjName: "Local building department (Title 24 / CBC)",
+    modelCodes: [
+      "California Building Code (CBC) — based on IBC",
+      "California Residential Code",
+      "California Electrical Code (based on NEC)",
+      "California Energy Code (Title 24, Part 6)",
+      "California Fire Code",
+    ],
+    notes: [
+      "Statewide Title 24 with local administration and amendments.",
+      "Energy (Part 6) and accessibility (Ch 11A/11B) paths are frequently material.",
+      "Confirm current edition and any local amendments with the AHJ.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire", "Energy"],
+  }),
+  pack({
+    id: "us-va",
+    label: "Virginia (state baseline)",
+    stateCode: "VA",
+    ahjName: "Local building department (USBC)",
+    modelCodes: [
+      "Virginia Uniform Statewide Building Code (USBC)",
+      "NEC as adopted",
+      "Virginia Statewide Fire Prevention Code",
+    ],
+    notes: [
+      "Statewide USBC with local enforcement.",
+      "Confirm the current USBC edition with the locality.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  }),
+  pack({
+    id: "us-ga",
+    label: "Georgia (state baseline)",
+    stateCode: "GA",
+    ahjName: "Local building department",
+    modelCodes: [
+      "Georgia State Minimum Standard Codes (based on I-Codes)",
+      "NEC as adopted",
+      "Georgia Fire codes as applicable",
+    ],
+    notes: [
+      "State minimum standard codes with local administration and amendments.",
+      "Confirm adopted edition and local amendments with the AHJ.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  }),
+  pack({
+    id: "us-pa",
+    label: "Pennsylvania (state baseline)",
+    stateCode: "PA",
+    ahjName: "Local code official (UCC)",
+    modelCodes: [
+      "Pennsylvania Uniform Construction Code (UCC)",
+      "NEC as adopted under UCC",
+      "Local fire rules as applicable",
+    ],
+    notes: [
+      "UCC is the statewide framework; some municipalities have limited opt-outs or amendments.",
+      "Confirm enforcement status and edition with the local code official.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  }),
+  pack({
+    id: "us-oh",
+    label: "Ohio (state baseline)",
+    stateCode: "OH",
+    ahjName: "Local building department",
+    modelCodes: [
+      "Ohio Building Code",
+      "Ohio Residential Code",
+      "NEC as adopted",
+    ],
+    notes: [
+      "Statewide building and residential codes with local administration.",
+      "Confirm current editions and any local amendments.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  }),
+  pack({
+    id: "us-nc",
+    label: "North Carolina (state baseline)",
+    stateCode: "NC",
+    ahjName: "Local building department",
+    modelCodes: [
+      "North Carolina Building Code (based on I-Codes)",
+      "North Carolina Residential Code",
+      "NEC as adopted",
+    ],
+    notes: [
+      "Statewide codes with local enforcement; residential review cycles have lengthened in recent years.",
+      "Confirm the current edition with the local department.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  }),
+  pack({
+    id: "us-sc",
+    label: "South Carolina (state baseline)",
+    stateCode: "SC",
+    ahjName: "Local building department",
+    modelCodes: [
+      "South Carolina Building Codes (based on I-Codes)",
+      "NEC as adopted",
+    ],
+    notes: [
+      "State-adopted codes with local administration.",
+      "Coastal and flood provisions are frequently material on the coast.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  }),
+  pack({
+    id: "us-ma",
+    label: "Massachusetts (state baseline)",
+    stateCode: "MA",
+    ahjName: "Local building department",
+    modelCodes: [
+      "Massachusetts State Building Code (based on I-Codes)",
+      "Massachusetts Electrical Code (based on NEC)",
+      "Stretch energy code where adopted",
+    ],
+    notes: [
+      "Statewide code with local enforcement; some municipalities adopt stretch energy provisions.",
+      "Confirm current edition and any stretch path with the AHJ.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  }),
+  pack({
+    id: "us-nj",
+    label: "New Jersey (state baseline)",
+    stateCode: "NJ",
+    ahjName: "Local construction official",
+    modelCodes: [
+      "New Jersey Uniform Construction Code",
+      "NEC as adopted",
+    ],
+    notes: [
+      "Statewide UCC with local construction officials.",
+      "Confirm current adopted editions with the municipality.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
+  }),
+  pack({
+    id: "us-md",
+    label: "Maryland (state baseline)",
+    stateCode: "MD",
+    ahjName: "Local building department",
+    modelCodes: [
+      "Maryland Building Performance Standards (based on I-Codes)",
+      "NEC as adopted",
+    ],
+    notes: [
+      "Statewide standards with local administration and amendments.",
+      "Confirm adopted edition and local amendments with the AHJ.",
+    ],
+    commonPermits: ["Building", "Electrical", "Plumbing", "Mechanical", "Fire"],
   }),
   pack({
     id: "us-co",
@@ -348,12 +531,18 @@ export function resolveAhjCodePack(input: {
   }
 
   if (st) {
+    // Prefer exact state baseline id (us-xx)
     const statePack = AHJ_CODE_PACKS.find(
       (p) => p.stateCode === st && p.id === `us-${st.toLowerCase()}`,
     );
     if (statePack) return statePack;
+
+    // Any dedicated pack for this state
     const anyState = AHJ_CODE_PACKS.find((p) => p.stateCode === st);
     if (anyState) return anyState;
+
+    // Synthesize a usable baseline so every selected state has guidance
+    return synthesizeStatePack(st);
   }
 
   return AHJ_CODE_PACKS.find((p) => p.id === "us-generic")!;
