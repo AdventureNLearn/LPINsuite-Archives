@@ -545,17 +545,34 @@ export const AHJ_CODE_PACKS: AhjCodePack[] = [
   }),
 ];
 
-/** Resolve best AHJ pack for a jobsite location. */
+/**
+ * Resolve AHJ / code pack for the jobsite.
+ * When a state is selected, the pack follows the state only — city, permit number,
+ * and office freeform fields do not override it. Every US state + DC synthesizes
+ * a baseline when no dedicated pack exists.
+ */
 export function resolveAhjCodePack(input: {
   stateCode?: string;
   cityState?: string;
   permittingOffice?: string;
   jurisdictionTemplateId?: string;
 }): AhjCodePack {
+  const st = (input.stateCode || "").toUpperCase().trim();
+
+  // State is the sole jurisdiction key for the AHJ panel.
+  if (st) {
+    const statePack = AHJ_CODE_PACKS.find(
+      (p) => p.stateCode === st && p.id === `us-${st.toLowerCase()}`,
+    );
+    if (statePack) return statePack;
+
+    // Synthesize so all 51 (50 states + DC) always get guidance.
+    return synthesizeStatePack(st);
+  }
+
+  // No state selected: optional city name hints only (never used when state is set).
   const city = (input.cityState || "").toLowerCase();
   const office = (input.permittingOffice || "").toLowerCase();
-  const st = (input.stateCode || "").toUpperCase();
-
   const cityHits: [string, string][] = [
     ["austin", "us-austin-tx"],
     ["miami", "us-miami-fl"],
@@ -571,21 +588,6 @@ export function resolveAhjCodePack(input: {
       const found = AHJ_CODE_PACKS.find((p) => p.id === id);
       if (found) return found;
     }
-  }
-
-  if (st) {
-    // Prefer exact state baseline id (us-xx)
-    const statePack = AHJ_CODE_PACKS.find(
-      (p) => p.stateCode === st && p.id === `us-${st.toLowerCase()}`,
-    );
-    if (statePack) return statePack;
-
-    // Any dedicated pack for this state
-    const anyState = AHJ_CODE_PACKS.find((p) => p.stateCode === st);
-    if (anyState) return anyState;
-
-    // Synthesize a usable baseline so every selected state has guidance
-    return synthesizeStatePack(st);
   }
 
   return AHJ_CODE_PACKS.find((p) => p.id === "us-generic")!;
