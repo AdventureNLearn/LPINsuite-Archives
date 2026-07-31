@@ -1,0 +1,17 @@
+{
+  "format": "lpin-jurisdiction-manifest",
+  "version": 1,
+  "generatedAt": "2026-07-31T10:10:50Z",
+  "packs": [
+    {
+      "stateCode": "FL",
+      "packVersion": "1.0.1",
+      "path": "/packs/states/FL.json"
+    },
+    {
+      "stateCode": "CA",
+      "packVersion": "1.0.2",
+      "path": "/packs/states/CA.json"
+    }
+  ]
+}
